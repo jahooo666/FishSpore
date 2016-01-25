@@ -1,6 +1,6 @@
 <html>
 <head>
- <title>Gra</title>
+    <title>Gra</title>
 </head>
 <body>
 <script type="application/javascript">
@@ -40,12 +40,27 @@
 
 
     // Game objects
-    var hero = {
-        speed: 256, // movement in pixels per second
-        x: 0,
-        y: 0
+    var Hero = function () {
+        this.speed = 256; // movement in pixels per second
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.fishCaught = 0;
+        this.dir = 0;
     };
-    var monstersCaught= 0;
+
+    hero = new Hero();
+    hero1 = new Hero();
+    hero2 = new Hero();
+    hero3 = new Hero();
+
+
+    var heroes = [];
+    heroes.push(hero);
+    heroes.push(hero1);
+    heroes.push(hero2);
+    heroes.push(hero3);
+
+
     var monster = {
         x: 0,
         y: 0
@@ -62,7 +77,6 @@
     addEventListener("keyup", function (e) {
         delete keysDown[e.keyCode];
     }, false);
-
 
 
     // Reset the game when the player catches a monster
@@ -85,21 +99,51 @@
         }
         if (37 in keysDown) { // Player holding left
             hero.x -= hero.speed * modifier;
+            hero.dir = 0;   //left
         }
         if (39 in keysDown) { // Player holding right
             hero.x += hero.speed * modifier;
+            hero.dir = 1; //right
+        }
+        if (9 in keysDown) { // Player holding right
+            a = new Hero();
+            heroes.push(a);
+            console.log(heroes.length);
         }
 
-        // Are they touching?
-        if (
-                hero.x <= (monster.x + heroImage.width)
-                && monster.x <= (hero.x + heroImage.width)
-                && hero.y <= (monster.y + heroImage.height)
-                && monster.y <= (hero.y + heroImage.height)
-        ) {
-
-            ++monstersCaught;
-            reset();
+        if (87 in keysDown) { // Player holding up
+            hero1.y -= hero1.speed * modifier;
+        }
+        if (83 in keysDown) { // Player holding down
+            hero1.y += hero1.speed * modifier;
+        }
+        if (65 in keysDown) { // Player holding left
+            hero1.x -= hero1.speed * modifier;
+            hero1.dir = 0;   //left
+        }
+        if (68 in keysDown) { // Player holding right
+            hero1.x += hero1.speed * modifier;
+            hero1.dir = 1; //right
+        }
+        if (9 in keysDown) { // Player holding right
+            a = new Hero();
+            heroes.push(a);
+            console.log(heroes.length);
+        }
+        
+        for(i=0; i<heroes.length; i++) {
+            lhero= heroes[i];
+            // Are they touching?
+            if (
+                    lhero.x <= (monster.x + heroImage.width)
+                    && monster.x <= (lhero.x + heroImage.width)
+                    && lhero.y <= (monster.y + heroImage.height)
+                    && monster.y <= (lhero.y + heroImage.height)
+            //powinno byc do konkretnego obiektu ale na razie walic
+            ) {
+                ++(lhero.fishCaught);
+                reset();
+            }
         }
     };
 
@@ -111,7 +155,10 @@
         }
 
         if (heroReady) {
-            ctx.drawImage(heroImage, hero.x, hero.y, heroImage.width*(1+monstersCaught/50),heroImage.height*(1+monstersCaught/50));
+            for (i = 0; i < heroes.length; i++) {
+                lhero = heroes[i];
+                ctx.drawImage(heroImage, lhero.x, lhero.y, heroImage.width * (1 + lhero.fishCaught / 30), heroImage.height * (1 + lhero.fishCaught / 30));
+            }
         }
 
         if (monsterReady) {
@@ -123,7 +170,7 @@
         ctx.font = "24px Helvetica";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        ctx.fillText("Fish eaten: " + monstersCaught, 32, 32);
+        ctx.fillText("Fish eaten: " + hero.fishCaught, 32, 32);
     };
 
 
@@ -131,7 +178,6 @@
     var main = function () {
         var now = Date.now();
         var delta = now - then;
-
         update(delta / 1000);
         render();
 

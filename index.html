@@ -97,6 +97,8 @@
                 && hero.y <= (monster.y + 32)
                 && monster.y <= (hero.y + 32)
         ) {
+            heroImage.width++;
+            heroImage.height++;
             ++monstersCaught;
             reset();
         }
@@ -110,7 +112,7 @@
         }
 
         if (heroReady) {
-            ctx.drawImage(heroImage, hero.x, hero.y);
+            ctx.drawImage(heroImage, hero.x, hero.y, heroImage.width*(1+monstersCaught/10),heroImage.height*(1+monstersCaught/10));
         }
 
         if (monsterReady) {

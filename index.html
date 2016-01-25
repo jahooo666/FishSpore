@@ -92,13 +92,12 @@
 
         // Are they touching?
         if (
-                hero.x <= (monster.x + 32)
-                && monster.x <= (hero.x + 32)
-                && hero.y <= (monster.y + 32)
-                && monster.y <= (hero.y + 32)
+                hero.x <= (monster.x + heroImage.width)
+                && monster.x <= (hero.x + heroImage.width)
+                && hero.y <= (monster.y + heroImage.height)
+                && monster.y <= (hero.y + heroImage.height)
         ) {
-            heroImage.width++;
-            heroImage.height++;
+
             ++monstersCaught;
             reset();
         }
@@ -112,7 +111,7 @@
         }
 
         if (heroReady) {
-            ctx.drawImage(heroImage, hero.x, hero.y, heroImage.width*(1+monstersCaught/10),heroImage.height*(1+monstersCaught/10));
+            ctx.drawImage(heroImage, hero.x, hero.y, heroImage.width*(1+monstersCaught/50),heroImage.height*(1+monstersCaught/50));
         }
 
         if (monsterReady) {

@@ -89,6 +89,12 @@ addEventListener("keyup", function (e) {
     delete keysDown[e.keyCode];
 }, false);
 
+
+// Reset the game when the player catches a badFish
+var reset = function () {
+};
+
+
 // Update game objects
 var update = function (modifier) {
     if (38 in keysDown) { // Player holding up
@@ -179,6 +185,9 @@ var update = function (modifier) {
             }
 
         }
+
+
+
     }
 };
 

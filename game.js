@@ -177,6 +177,7 @@ var update = function (modifier) {
                 lenemy = new BadFish();
                 enemies.push(lenemy);
             }
+
         }
     }
 };

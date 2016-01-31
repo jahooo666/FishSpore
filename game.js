@@ -24,13 +24,13 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/hero.png";
 
-//monster image
-var monsterReady = false;
-var monsterImage = new Image();
-monsterImage.onload = function () {
-    monsterReady = true;
+//badFish image
+var badFishReady = false;
+var badFishImage = new Image();
+badFishImage.onload = function () {
+    badFishReady = true;
 };
-monsterImage.src = "images/monster.png";
+badFishImage.src = "images/badFish.png";
 
 
 // Game objects
@@ -42,18 +42,37 @@ var Hero = function () {
     this.alive = true;
 };
 
+var BadFish = function () {
+    this.speed = 0.2; // movement in pixels per second
+    this.x = 32 + (Math.random() * (canvas.width - 64));
+    this.y = 32 + (Math.random() * (canvas.height - 64));
+    this.alive = true;
+};
+
 hero = new Hero();
 hero1 = new Hero();
 hero2 = new Hero();
-
 
 var heroes = [];
 heroes.push(hero);
 heroes.push(hero1);
 heroes.push(hero2);
 
+var enemies = [];
+enemy1 = new BadFish();
+enemy2 = new BadFish();
+enemy3 = new BadFish();
+enemy4 = new BadFish();
+enemy5 = new BadFish();
+enemy6 = new BadFish();
+enemies.push(enemy1);
+enemies.push(enemy2);
+enemies.push(enemy3);
+enemies.push(enemy4);
+enemies.push(enemy5);
+enemies.push(enemy6);
 
-var monster = {
+var badFish = {
     x: 0,
     y: 0
 };
@@ -70,24 +89,17 @@ addEventListener("keyup", function (e) {
     delete keysDown[e.keyCode];
 }, false);
 
-
-// Reset the game when the player catches a monster
-var reset = function () {
-    //hero.x = canvas.width / 2;
-    //hero.y = canvas.height / 2;
-
-    // Throw the monster somewhere on the screen randomly
-    monster.x = 32 + (Math.random() * (canvas.width - 64));
-    monster.y = 32 + (Math.random() * (canvas.height - 64));
-};
-
 // Update game objects
 var update = function (modifier) {
     if (38 in keysDown) { // Player holding up
-        hero.y -= hero.speed * modifier;
+        if (hero.y > 0) {
+            hero.y -= hero.speed * modifier;
+        }
     }
     if (40 in keysDown) { // Player holding down
-        hero.y += hero.speed * modifier;
+        if (hero.y < canvas.height - 20) {
+            hero.y += hero.speed * modifier;
+        }
     }
     if (37 in keysDown) { // Player holding left
         hero.x -= hero.speed * modifier;
@@ -104,20 +116,30 @@ var update = function (modifier) {
     }
 
     if (87 in keysDown) { // Player holding up
-        hero1.y -= hero1.speed * modifier;
+        if (hero1.y > 0) {
+            hero1.y -= hero1.speed * modifier;
+        }
     }
     if (83 in keysDown) { // Player holding down
-        hero1.y += hero1.speed * modifier;
+        if (hero1.y < canvas.height - 20) {
+            hero1.y += hero1.speed * modifier;
+        }
     }
     if (65 in keysDown) { // Player holding left
         hero1.x -= hero1.speed * modifier;
-        hero1.dir = 0;   //left
     }
     if (68 in keysDown) { // Player holding right
         hero1.x += hero1.speed * modifier;
-        hero1.dir = 1; //right
     }
     for (i = 0; i < heroes.length; i++) {
+
+        for (j = 0; j < enemies.length; j++) {
+            if ((enemies[j].x) > canvas.width) {
+                enemies[j].x = -30;
+            }
+            enemies[j].x += enemies[j].speed;
+        }
+
         lhero = heroes[i];
         for (j = 0; j < heroes.length; j++) {
             if (j != i) {
@@ -132,7 +154,7 @@ var update = function (modifier) {
                 //powinno byc do konkretnego obiektu ale na razie walic
                 ) {
                     //zabieramy mu wszystkie zjedzone rybki i killym
-                    (lhero.fishCaught)=lhero.fishCaught + lhero1.fishCaught;
+                    (lhero.fishCaught) = lhero.fishCaught + lhero1.fishCaught;
                     lhero1.fishCaught = 0;
                     lhero1.alive = false;
                     reset();
@@ -140,19 +162,28 @@ var update = function (modifier) {
             }
         }
 
-
-        // Are they touching?
-        if (
-            lhero.x <= (monster.x + heroImage.width)
-            && monster.x <= (lhero.x + heroImage.width)
-            && lhero.y <= (monster.y + heroImage.height)
-            && monster.y <= (lhero.y + heroImage.height)
-        //powinno byc do konkretnego obiektu ale na razie walic
-        ) {
-            ++(lhero.fishCaught);
-            reset();
+        //zjadanie wrogów
+        for (j = 0; j < enemies.length; j++) {
+            lenemy = enemies[j];
+            if (lenemy.alive
+                && lhero.alive
+                && lhero.x <= (lenemy.x + heroImage.width)
+                && lenemy.x <= (lhero.x + heroImage.width)
+                && lhero.y <= (lenemy.y + heroImage.height)
+                && lenemy.y <= (lhero.y + heroImage.height)
+            ) {
+                lhero.fishCaught++;
+                lenemy.alive=false;
+                lenemy = new BadFish();
+                enemies.push(lenemy);
+            }
         }
     }
+};
+
+document.getElementById('button').onclick = function () {
+    var newhero = new Hero;
+    heroes.push(newhero);
 };
 
 
@@ -171,8 +202,12 @@ var render = function () {
         }
     }
 
-    if (monsterReady) {
-        ctx.drawImage(monsterImage, monster.x, monster.y);
+    if (badFishReady) {
+        for (i = 0; i < enemies.length; i++) {
+            if (enemies[i].alive) {
+                ctx.drawImage(badFishImage, enemies[i].x, enemies[i].y);
+            }
+        }
     }
 
     // Score

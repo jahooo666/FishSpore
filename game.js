@@ -1,12 +1,11 @@
 //gra oparta w znacznej części na kodzie przekopiowanym z http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/
 
-
 // Create the canvas
-var canvas = document.createElement("canvas");
+var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 1000;
-canvas.height = 600;
-document.body.appendChild(canvas);
+canvas.width = 900;
+canvas.height = 500;
+//document.body.appendChild(canvas);
 
 // Background image
 var bgReady = false;
@@ -241,7 +240,7 @@ var render = function () {
 
 //funkcje potrzebne do przystosowania do websocketow
 
-var moveRight = function(Hero){
+var moveRight = function(actor){
 
 }
 

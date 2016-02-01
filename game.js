@@ -56,7 +56,6 @@ hero2 = new Hero();
 var heroes = [];
 heroes.push(hero);
 heroes.push(hero1);
-heroes.push(hero2);
 
 var enemies = [];
 enemy1 = new BadFish();
@@ -109,17 +108,17 @@ var update = function (modifier) {
     }
     if (37 in keysDown) { // Player holding left
         hero.x -= hero.speed * modifier;
-        hero.dir = 0;   //left
+        if ((hero.x) < -30) {
+            hero.x = canvas.width;
+        }
     }
     if (39 in keysDown) { // Player holding right
         hero.x += hero.speed * modifier;
-        hero.dir = 1; //right
+        if ((hero.x) > canvas.width) {
+            hero.x = -30;
+        }
     }
-    if (9 in keysDown) { // Player holding right
-        a = new Hero();
-        heroes.push(a);
-        console.log(heroes.length);
-    }
+
 
     if (87 in keysDown) { // Player holding up
         if (hero1.y > 0) {
@@ -133,9 +132,15 @@ var update = function (modifier) {
     }
     if (65 in keysDown) { // Player holding left
         hero1.x -= hero1.speed * modifier;
+        if ((hero1.x) < -30) {
+            hero1.x = canvas.width;
+        }
     }
     if (68 in keysDown) { // Player holding right
         hero1.x += hero1.speed * modifier;
+        if ((hero1.x) > canvas.width) {
+            hero1.x = -30;
+        }
     }
     for (i = 0; i < heroes.length; i++) {
 
@@ -234,6 +239,22 @@ var render = function () {
     //ctx.fillText("Fish eaten: " + hero.fishCaught, 32, 32);
 };
 
+//funkcje potrzebne do przystosowania do websocketow
+
+var moveRight = function(Hero){
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // The main game loop
 var main = function () {
@@ -247,6 +268,9 @@ var main = function () {
     // Request to do this again ASAP
     requestAnimationFrame(main);
 };
+
+
+
 
 
 // Let's play this game!
